@@ -1,15 +1,10 @@
 {
-    "name": "Apple.PHASE.Editor",
+    "name": "Apple.Core.Demos",
+    "rootNamespace": "",
     "references": [
-        "Apple.PHASE",
-        "XNodeEditor",
-        "XNode",
-        "Apple.Core.Editor",
-        "Apple.Core"
+        "GUID:1e90ac084be3f8d469f923da4b9f7c81"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

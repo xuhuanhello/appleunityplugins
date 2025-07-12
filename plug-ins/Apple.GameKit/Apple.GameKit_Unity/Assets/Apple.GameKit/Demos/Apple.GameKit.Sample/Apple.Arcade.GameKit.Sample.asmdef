@@ -17,7 +17,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_TVOS || UNITY_VISIONOS"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

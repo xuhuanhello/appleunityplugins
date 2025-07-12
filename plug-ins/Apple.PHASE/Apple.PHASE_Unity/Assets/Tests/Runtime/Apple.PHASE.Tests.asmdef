@@ -21,6 +21,7 @@
     ],
     "autoReferenced": false,
     "defineConstraints": [
+        "UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_TVOS || UNITY_VISIONOS",
         "UNITY_INCLUDE_TESTS"
     ],
     "versionDefines": [],
