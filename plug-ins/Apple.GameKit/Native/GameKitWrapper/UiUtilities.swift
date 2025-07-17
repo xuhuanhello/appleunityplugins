@@ -66,17 +66,22 @@ class UiUtilities {
 
 #else
     static func defaultWindow() -> UIWindow? {
-        guard let windowScene = UIApplication.shared.connectedScenes.first(where: { scene in
-            return scene is UIWindowScene;
-        }) as? UIWindowScene else {
+        if #available(iOS 13.0, *) {
+            guard let windowScene = UIApplication.shared.connectedScenes.first(where: { scene in
+                return scene is UIWindowScene;
+            }) as? UIWindowScene else {
+                return nil;
+            }
+            if let window = windowScene.windows.first(where: { window in
+                return window.rootViewController != nil;
+            }) {
+                return window;
+            }
             return nil;
+        } else {
+            // iOS 12 fallback - use deprecated keyWindow
+            return UIApplication.shared.keyWindow;
         }
-        if let window = windowScene.windows.first(where: { window in
-            return window.rootViewController != nil;
-        }) {
-            return window;
-        }
-        return nil;
     }
 
     static func rootViewController() -> UIViewController? {

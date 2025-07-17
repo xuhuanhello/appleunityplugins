@@ -14,8 +14,12 @@ public func GKPlayer_GetGamePlayerId
     pointer : UnsafeMutablePointer<GKPlayer>
 ) -> char_p
 {
-    let player = pointer.takeUnretainedValue();
-    return player.gamePlayerID.toCharPCopy();
+    if #available(iOS 12.4, tvOS 12.4, macOS 10.14.6, *) {
+        let player = pointer.takeUnretainedValue();
+        return player.gamePlayerID.toCharPCopy();
+    } else {
+        DefaultNSErrorHandler.throwApiUnavailableError();
+    }
 }
 
 @_cdecl("GKPlayer_GetTeamPlayerId")
@@ -24,8 +28,12 @@ public func GKPlayer_GetTeamPlayerId
     pointer : UnsafeMutablePointer<GKPlayer>
 ) -> char_p
 {
-    let player = pointer.takeUnretainedValue();
-    return player.teamPlayerID.toCharPCopy();
+    if #available(iOS 12.4, tvOS 12.4, macOS 10.14.6, *) {
+        let player = pointer.takeUnretainedValue();
+        return player.teamPlayerID.toCharPCopy();
+    } else {
+        DefaultNSErrorHandler.throwApiUnavailableError();
+    }
 }
 
 @_cdecl("GKPlayer_GetScopedIDsArePersistent")
@@ -34,8 +42,12 @@ public func GKPlayer_GetScopedIDsArePersistent
     pointer : UnsafeMutablePointer<GKPlayer>
 ) -> Bool
 {
-    let player = pointer.takeUnretainedValue();
-    return player.scopedIDsArePersistent();
+    if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+        let player = pointer.takeUnretainedValue();
+        return player.scopedIDsArePersistent();
+    } else {
+        DefaultNSErrorHandler.throwApiUnavailableError();
+    }
 }
 
 @_cdecl("GKPlayer_GetAlias")
@@ -78,8 +90,12 @@ public func GKPlayer_GetScopedIdsArePersistent
     pointer : UnsafeMutablePointer<GKPlayer>
 ) -> Bool
 {
-    let player = pointer.takeUnretainedValue();
-    return player.scopedIDsArePersistent();
+    if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+        let player = pointer.takeUnretainedValue();
+        return player.scopedIDsArePersistent();
+    } else {
+        DefaultNSErrorHandler.throwApiUnavailableError();
+    }
 }
 
 @_cdecl("GKPlayer_GetGuestIdentifier")

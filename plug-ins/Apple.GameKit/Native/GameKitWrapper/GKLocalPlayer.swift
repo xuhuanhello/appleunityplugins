@@ -133,8 +133,12 @@ public func GKLocalPlayer_GetIsMultiplayerGamingRestricted
     pointer: UnsafeMutablePointer<GKLocalPlayer>
 ) -> Bool
 {
-    let player = pointer.takeUnretainedValue();
-    return player.isMultiplayerGamingRestricted;
+    if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+        let player = pointer.takeUnretainedValue();
+        return player.isMultiplayerGamingRestricted;
+    } else {
+        DefaultNSErrorHandler.throwApiUnavailableError();
+    }
 }
 
 @_cdecl("GKLocalPlayer_GetIsPersonalizedCommunicationRestricted")
