@@ -62,15 +62,15 @@ public func GKLeaderboardSet_LoadLeaderboards
         // iOS 12 中 GKLeaderboardSet 存在但没有 loadLeaderboards(handler:) 方法
         // 使用旧的 loadLeaderboards() 方法
         let target = pointer.takeUnretainedValue();
-        target.loadLeaderboards { error in
+        target.loadLeaderboards(completionHandler: { leaderboards, error in
             if let error = error as? NSError {
                 onError(taskId, error.passRetainedUnsafeMutablePointer());
                 return;
             }
             
-            // 在 iOS 12 中，loadLeaderboards 不返回数组，而是设置 leaderboards 属性
-            onSuccess(taskId, (target.leaderboards as? NSArray)?.passRetainedUnsafeMutablePointer());
-        }
+            // 在 iOS 12 中，loadLeaderboards 返回 leaderboards 数组
+            onSuccess(taskId, (leaderboards as? NSArray)?.passRetainedUnsafeMutablePointer());
+        })
     } else {
         onError(taskId, NSError(code: GKErrorCodeExtension.unsupportedOperationForOSVersion).passRetainedUnsafeMutablePointer());
     };

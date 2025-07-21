@@ -198,7 +198,7 @@ public func GKLeaderboard_LoadEntries
         target.timeScope = GKLeaderboard.TimeScope(rawValue: timeScope) ?? .allTime
         target.range = NSMakeRange(rankMin, (rankMax + 1) - rankMin);
         
-        target.loadScores { error in
+        target.loadScores(completionHandler: { scores, error in
             if let error = error as? NSError {
                 onError(taskId, error.passRetainedUnsafeMutablePointer());
                 return;
@@ -208,8 +208,8 @@ public func GKLeaderboard_LoadEntries
             // 注意：在 iOS 12 中，没有新的 Entry 类型，所以我们需要创建一个兼容的响应
             // 对于 iOS 12，我们返回 nil 的 localPlayerEntry 和空的 entries 数组以及总数 0
             // 这样可以保证不会崩溃，但功能会受限
-            onSuccess(taskId, nil, nil, target.scores?.count ?? 0);
-        }
+            onSuccess(taskId, nil, nil, scores?.count ?? 0);
+        })
     } else {
         onError(taskId, NSError(code: GKErrorCodeExtension.unsupportedOperationForOSVersion).passRetainedUnsafeMutablePointer());
     }
@@ -322,14 +322,14 @@ public func GKLeaderboard_SubmitScore
         gkScore.value = Int64(score)
         gkScore.context = UInt64(context)
         
-        GKScore.report([gkScore]) { error in
+        GKScore.report([gkScore], withCompletionHandler: { error in
             if let error = error as? NSError {
                 onError(taskId, error.passRetainedUnsafeMutablePointer());
                 return;
             }
             
             onSuccess(taskId);
-        }
+        })
     } else {
         onError(taskId, NSError(code: GKErrorCodeExtension.unsupportedOperationForOSVersion).passRetainedUnsafeMutablePointer());
     }
