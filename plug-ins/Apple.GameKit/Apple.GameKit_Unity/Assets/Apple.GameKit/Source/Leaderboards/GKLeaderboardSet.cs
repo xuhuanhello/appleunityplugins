@@ -33,7 +33,7 @@ namespace Apple.GameKit.Leaderboards
         /// Loads the leaderboards in the leaderboard set.
         /// </summary>
         /// <returns></returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task<NSArray<GKLeaderboard>> LoadLeaderboards()
         {
             var tcs = InteropTasks.Create<NSArray<GKLeaderboard>>(out var taskId);

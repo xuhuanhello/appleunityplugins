@@ -9,12 +9,23 @@ using UnityEngine;
 
 namespace Apple.GameKit.Leaderboards
 {
+    /// <summary>
+    /// Represents a leaderboard with Game Center compatibility for iOS 12+.
+    /// 
+    /// NOTE: iOS 12+ Compatibility:
+    /// - Minimum supported versions: iOS 12.0, macOS 11.0, tvOS 14.0, visionOS 1.0
+    /// - LoadLeaderboards: Uses legacy GKLeaderboard.loadLeaderboards() on iOS 12-13, new API on iOS 14+
+    /// - SubmitScore: Uses GKScore.report() on iOS 12-13, new leaderboard.submitScore() on iOS 14+
+    /// - LoadEntries: Limited functionality on iOS 12-13 due to different API structure
+    /// - Recurring leaderboard features: Only available on iOS 14+, graceful fallbacks on iOS 12-13
+    /// - iOS < 12: Will throw GameKitException with unsupported operation error
+    /// </summary>
     public class GKLeaderboard : NSObject
     {
         /// <summary>
         /// Specifies whether a leaderboard is recurring.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public enum LeaderboardType : long
         {
             Classic = 0,
@@ -58,7 +69,7 @@ namespace Apple.GameKit.Leaderboards
         /// <summary>
         /// Information about a single score by a player on a leaderboard.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public class Entry : NSObject
         {
             internal Entry(IntPtr pointer) : base(pointer) {}
@@ -102,7 +113,7 @@ namespace Apple.GameKit.Leaderboards
         /// <summary>
         /// The ID that Game Center uses to identify this leaderboard.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public string BaseLeaderboardId => Interop.GKLeaderboard_GetBaseLeaderboardId(Pointer);
         
         /// <summary>
@@ -113,7 +124,7 @@ namespace Apple.GameKit.Leaderboards
         /// <summary>
         /// The type of leaderboard, classic or recurring.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public LeaderboardType Type => Interop.GKLeaderboard_GetType(Pointer);
         
         /// <summary>
@@ -124,19 +135,19 @@ namespace Apple.GameKit.Leaderboards
         /// <summary>
         /// The date and time a recurring leaderboard occurrence starts accepting scores.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public DateTimeOffset StartDate => DateTimeOffsetExtensions.FromUnixTimeSeconds(Interop.GKLeaderboard_GetStartDate(Pointer));
         
         /// <summary>
         /// The date and time the next recurring leaderboard occurrence starts accepting scores.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public DateTimeOffset NextStartDate => DateTimeOffsetExtensions.FromUnixTimeSeconds(Interop.GKLeaderboard_GetNextStartDate(Pointer));
         
         /// <summary>
         /// The duration from the start date that a recurring leaderboard occurrence accepts scores.
         /// </summary>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public TimeSpan Duration => TimeSpan.FromSeconds(Interop.GKLeaderboard_GetDuration(Pointer));
 
         #region Load Leaderboards
@@ -146,7 +157,7 @@ namespace Apple.GameKit.Leaderboards
         /// </summary>
         /// <param name="identifiers">The leaderboards that match the IDs or null for all leaderboards.</param>
         /// <returns></returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public static Task<NSArray<GKLeaderboard>> LoadLeaderboards(params string[] identifiers)
         {
             var tcs = InteropTasks.Create<NSArray<GKLeaderboard>>(out var taskId);
@@ -184,7 +195,7 @@ namespace Apple.GameKit.Leaderboards
         /// <param name="context">An long value that your game uses.</param>
         /// <param name="player">The player who earns the score.</param>
         /// <returns></returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task SubmitScore(long score, long context, GKPlayer player)
         {
             var tcs = InteropTasks.Create<bool>(out var taskId);
@@ -211,7 +222,7 @@ namespace Apple.GameKit.Leaderboards
         /// Loads the previous recurring leaderboard occurrence that the player submits a score to.
         /// </summary>
         /// <returns>The previous occurrence of this leaderboard that the player submits a score to, or the most recent occurrence if GameKit can't find the previous one.</returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task<GKLeaderboard> LoadPreviousOccurrence()
         {
             var tcs = InteropTasks.Create<GKLeaderboard>(out var taskId);
@@ -245,7 +256,7 @@ namespace Apple.GameKit.Leaderboards
         /// <param name="rankMin">Specifies the range of ranks to use for getting the scores. The minimum rank is 1.</param>
         /// <param name="rankMax">Specifies the range of ranks to use for getting the scores. The total number of entries requested must not exceed 100.</param>
         /// <returns></returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task<GKLeaderboardLoadEntriesResponse> LoadEntries(PlayerScope playerScope, TimeScope timeScope, long rankMin, long rankMax)
         {
             var tcs = InteropTasks.Create<GKLeaderboardLoadEntriesResponse>(out var taskId);
@@ -293,7 +304,7 @@ namespace Apple.GameKit.Leaderboards
         /// For recurring leaderboards, pass GKLeaderboardTimeScopeAllTime for this parameter.
         /// </param>
         /// <returns></returns>
-        [Introduced(iOS: "14.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task<GKLeaderboardLoadEntriesForPlayersResponse> LoadEntriesForPlayers(NSArray<GKPlayer> players, TimeScope timeScope)
         {
             var tcs = InteropTasks.Create<GKLeaderboardLoadEntriesForPlayersResponse>(out var taskId);
@@ -336,6 +347,7 @@ namespace Apple.GameKit.Leaderboards
         /// Loads the image for the default leaderboard.
         /// </summary>
         /// <returns></returns>
+        [Introduced(iOS: "12.0", macOS: "11.0", tvOS: "14.0", visionOS: "1.0")]
         public Task<Texture2D> LoadImage()
         {
             var tcs = InteropTasks.Create<Texture2D>(out var taskId);
